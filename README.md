@@ -8,5 +8,5 @@ This project is developed by taking JS mastery you-tube channel video tailwind c
 ### Desktop view of the website is
 ![Desktop View](desktopView.png)
 ### Mobile view 
-![Mobile view](c:\Users\91939\OneDrive\Pictures\Screenshots\Screenshot (113).png)
+![Mobile view](mobileView.png)
 
