@@ -1,8 +1,13 @@
-# React + Vite
+# HOO Bank 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+I developed this project to get an hands on experience on tailwind css
+This project is developed by taking JS mastery you-tube channel video tailwind css project into reference 
 
-Currently, two official plugins are available:
+## Figma link for this project : https://www.figma.com/file/bUGIPys15E78w9bs1l4tgS/HooBank?type=design&node-id=310-485&mode=design&t=MP2HKqSYinYyEK4v-0 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Desktop view of the website is
+![Desktop view](c:\Users\91939\OneDrive\Pictures\Screenshots\Screenshot (111).png)
+
+### Mobile view 
+![Mobile view](c:\Users\91939\OneDrive\Pictures\Screenshots\Screenshot (113).png)
+
