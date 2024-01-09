@@ -6,8 +6,7 @@ This project is developed by taking JS mastery you-tube channel video tailwind c
 ## Figma link for this project : https://www.figma.com/file/bUGIPys15E78w9bs1l4tgS/HooBank?type=design&node-id=310-485&mode=design&t=MP2HKqSYinYyEK4v-0 
 
 ### Desktop view of the website is
-![Desktop view](c:\Users\91939\OneDrive\Pictures\Screenshots\Screenshot (111).png)
-
+![Desktop View](desktopView.png)
 ### Mobile view 
 ![Mobile view](c:\Users\91939\OneDrive\Pictures\Screenshots\Screenshot (113).png)
 
