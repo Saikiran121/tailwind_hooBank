@@ -8,5 +8,11 @@ pipeline {
                 sh 'npm -v'
             }
         }
+
+        stage('Installing Dependencies') {
+            steps {
+                sh 'npm ci'
+            }
+        }
     }
 }
