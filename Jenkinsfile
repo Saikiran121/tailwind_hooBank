@@ -14,5 +14,11 @@ pipeline {
                 sh 'npm ci'
             }
         }
+
+        stage('NPM Dependency Audit') {
+            steps {
+                sh 'npm audit --audit-level=critical'
+            }
+        }
     }
 }
