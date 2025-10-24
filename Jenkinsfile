@@ -132,6 +132,44 @@ pipeline {
             }
         }
 
+        stage('Trivy Image Scan') {
+            steps {
+                sh '''
+                    set -e 
+
+                    mkdir -p ${TRIVY_CACHE_DIR}
+                    [ -s trivy-html.tpl ] || curl -fsSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o trivy-html.tpl
+
+                    trivy image \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --format template --template "@trivy-html.tpl" \
+                        -o trivy-image-report.html \
+                        ${IMAGE_NAME}
+                    
+                    trivy image \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 1 \
+                        ${IMAGE_NAME}
+                '''
+            }
+
+            post {
+                always {
+                    archiveArtifacts artifacts: 'trivy-image-report.html', allowEmptyArchive: true
+
+                    publishHTML(target: [
+                        allowMissing: true, 
+                        keepAll: true, 
+                        reportDir: '.',
+                        reportFiles: 'trivy-image-report.html',
+                        reportName: 'Trivy Image Scan Report'
+                    ])
+                }
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 withDockerRegistry(credentialsId: 'dockerhub', url: "") {
@@ -139,6 +177,8 @@ pipeline {
                 }
             }
         }
+
+
 
         
     }
