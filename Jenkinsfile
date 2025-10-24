@@ -86,6 +86,13 @@ pipeline {
                     set -e
                     mkdir -p $TRIVY_CACHE_DIR
 
+                    # Get the official HTML template into the WORKSPACE
+                    for i in 1 2 3; do 
+                        curl -fsSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o trivy-html.tpl && break || sleep 2
+                    done
+
+                    test -s trivy-html.tpl
+
                     # Scan local source directory for vulnerabilities, secrets, and misconfigurations
 
                     trivy fs --scanners vuln,secret,config \
@@ -99,7 +106,7 @@ pipeline {
                     trivy fs --scanners vuln,secret,config \
                         --severity HIGH,CRITICAL \
                         --ignore-unfixed \
-                        --exit-code 0 .
+                        --exit-code 1 .
                 '''
             }
 
