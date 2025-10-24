@@ -51,7 +51,7 @@ pipeline {
 
                     // 3) Email the report (uses global Gmail SMTP config)
 
-                    emailtext(
+                    emailext(
                         to: 'biradarsaikiran22@gmail.com',
                         subject: "OWASP Dependency Check - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         mimeType: 'text/html',
