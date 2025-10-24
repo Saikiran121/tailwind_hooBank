@@ -83,6 +83,7 @@ pipeline {
                 echo 'Running Trivy Filesystem Scan'
 
                 sh '''
+                    set -e
                     mkdir -p $TRIVY_CACHE_DIR
 
                     # Scan local source directory for vulnerabilities, secrets, and misconfigurations
@@ -91,7 +92,8 @@ pipeline {
                         --severity HIGH,CRITICAL \
                         --ignore-unfixed \
                         --exit-code 0 \
-                        --format html -o trivy-fs-report.html .
+                        --format template --template "@trivy-html.tpl" \
+                        -o trivy-fs-report.html .
                     
                     # Fail build if critical/high vulnerabilities found
                     trivy fs --scanners vuln,secret,config \
