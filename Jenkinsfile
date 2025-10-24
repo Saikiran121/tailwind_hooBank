@@ -208,6 +208,19 @@ pipeline {
             }
         }
 
-        
+        stage('Test SSH to EC2') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh',
+                                                    keyFileVariable: 'SSH_KEY',
+                                                    usernameVariable: 'SSH_USER')]) {
+                
+                    sh ''' 
+                        set -e 
+                        EC2_HOST="13.233.138.122"
+                        ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" "$SSH_USER@$EC2_HOST" "hostname && whoami && uptime"
+                    '''                                        
+                }
+            }
+        } 
     }
 }
