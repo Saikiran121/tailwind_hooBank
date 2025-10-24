@@ -72,5 +72,11 @@ pipeline {
                 }
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t saikiran8050/tailwind_hoobank:$GIT_COMMIT .'
+            }
+        }
     }
 }
