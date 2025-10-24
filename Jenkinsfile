@@ -78,5 +78,13 @@ pipeline {
                 sh 'docker build -t saikiran8050/tailwind_hoobank:$GIT_COMMIT .'
             }
         }
+
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub', url: "") {
+                    sh 'docker push saikiran8050/tailwind_hoobank:$GIT_COMMIT'
+                }
+            }
+        }
     }
 }
