@@ -23,15 +23,17 @@ FROM nginx:alpine
 
 RUN apk update && apk upgrade --no-cache
 
-RUN addgroup -S app && adduser -S -G app app \
-    && mkdir -p /var/cache/nginx /var/run /var/log/nginx /etc/nginx/conf.d /usr/share/nginx/html /run \
-    && chown -R app:app /var/cache/nginx /var/run /var/log/nginx /etc/nginx /usr/share/nginx/html /run
+RUN addgroup -S -g 10001 app \
+    && adduser  -S -D -H -u 10001 -G app app \
+    && mkdir -p /var/cache/nginx /var/run /var/log/nginx /tmp \
+    && chown -R 10001:10001 /var/cache/nginx /var/run /var/log/nginx /etc/nginx /usr/share/nginx/html /tmp
+
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
-USER app
+USER 10001:10001
 
 EXPOSE 8080
 

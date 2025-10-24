@@ -15,9 +15,8 @@ spec:
     spec:
       # Pod-level security context
       securityContext:
-        runAsNonRoot: true 
-        seccompProfile:
-          type: RuntimeDefault
+        fsGroup: 10001
+        runAsNonRoot: true
 
       containers:
         - name: hoobank 
@@ -27,11 +26,11 @@ spec:
           
           # Container-level hardening
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
+            runAsUser: 10001
+            runAsGroup: 10001
+            runAsNonRoot: true
             readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
 
           readinessProbe:
             httpGet:
