@@ -17,6 +17,8 @@ RUN npm run build
 
 FROM nginx:alpine
 
+RUN apk update && apk upgrade --no-cache
+
 RUN addgroup -S app && adduser -S -G app app \
     && mkdir -p /var/cache/nginx /var/run /var/log/nginx \
     && chown -R app:app /var/cache/nginx /var/run /var/log/nginx /etc/nginx /usr/share/nginx/html
