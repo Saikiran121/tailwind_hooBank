@@ -9,6 +9,7 @@ pipeline {
         AWS_ACCOUNT_ID = '554739428262'
         ECR_REPO = 'tailwind_hoobank'
         ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
+        IMAGE_TAG = "${GIT_COMMIT}"
     }
 
     stages {
