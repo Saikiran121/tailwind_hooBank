@@ -230,7 +230,7 @@ pipeline {
             }
 
             steps {
-                withAWS(credentials: 'aws-ecr', region: ${AWS_DEFAULT_REGION}) {
+                withAWS(credentials: 'aws-ecr', region: "${AWS_DEFAULT_REGION}") {
                     sh '''
                         set -e 
 
