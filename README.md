@@ -10,3 +10,19 @@ This project is developed by taking JS mastery you-tube channel video tailwind c
 ### Mobile view 
 ![Mobile view](mobileView.png)
 
+
+# Jenkins SMTP Configuration
+  - Jenkins --> Manage Jenkins --> System --> E-mail Notification --> SMTP server (smtp.gmail.com) --> Check Use SMTP Authentication
+    --> Username (mail id) --> Password [goto https://myaccount.google.com/apppasswords --> Give name] --> Check Use SSL --> Add
+    Reply-To Address mail --> 
+  
+  - Advanced properties
+    
+    mail.smtp.auth=true
+    mail.smtp.starttls.enable=true
+    mail.smtp.starttls.required=true
+    mail.smtp.ssl.trust=smtp.gmail.com
+    mail.smtp.connectiontimeout=10000
+    mail.smtp.timeout=20000
+
+
