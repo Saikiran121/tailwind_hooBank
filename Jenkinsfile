@@ -185,26 +185,24 @@ pipeline {
 
         stage('Push to AWS ECR') {
             steps {
-                sh '''
-                    set -e 
 
-                    # ECR Login
-                    aws ecr get-login-password --region "${AWS_REGION}" \
-                        | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-                    
+                withAWS(credentials: 'aws-ecr', region: "${AWS_REGION}")  {
+                    echo 'Logged into AWS ECR'
 
-                    # Ensure repo exists
-                    aws ecr describe-repositories --repository-names "${ECR_REPO}" --region "${AWS_REGION}" \
-                        || aws ecr create-repository --repository-name "${ECR_REPO}" --region "${AWS_REGION}"
-                    
-                    # Tag and Push
-                    docker tag "saikiran8050/tailwind_hoobank:${IMAGE_TAG}" "${ECR_URI}:${IMAGE_TAG}"
-                    docker push "${ECR_URI}:${IMAGE_TAG}"
+                    sh '''
+                        set -euxo pipefail
+                        aws sts get-caller-identity
 
-                    # also push latest tag
-                    docker tag "saikiran8050/tailwind_hoobank:${IMAGE_TAG}" "${ECR_URI}:latest"
-                    docker push "${ECR_URI}:latest"
-                '''
+                        aws ecr get-login-password --region "${AWS_REGION}" \
+                            | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+
+                        aws ecr describe-repositories --repository-names "${ECR_REPO}" --region "${AWS_REGION}" \
+                            || aws ecr create-repository --repository-name "${ECR_REPO}" --region "${AWS_REGION}"
+
+                        docker tag "saikiran8050/tailwind_hoobank:${IMAGE_TAG}" "${ECR_URI}:${IMAGE_TAG}"
+                        docker push "${ECR_URI}:${IMAGE_TAG}"
+                    '''
+                }
             }
         }
 
