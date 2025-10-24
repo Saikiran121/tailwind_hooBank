@@ -1,16 +1,20 @@
 FROM node:18-alpine AS build
 
-RUN mkdir -p /app && chown -R node:node /app
+#RUN mkdir -p /app && chown -R node:node /app
 
 WORKDIR /app 
 
-USER node 
+COPY package*.json ./
 
-COPY --chown=node:node package*.json ./
+#USER node 
+
+#COPY --chown=node:node package*.json ./
 
 RUN npm ci 
 
-COPY --chown=node:node . .
+#COPY --chown=node:node . .
+
+COPY . .
 
 RUN npm run build
 
