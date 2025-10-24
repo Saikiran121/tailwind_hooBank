@@ -190,11 +190,12 @@ pipeline {
                     echo 'Logged into AWS ECR'
 
                     sh '''
-                        set -euxo pipefail
+                        set -eux
                         aws sts get-caller-identity
 
-                        aws ecr get-login-password --region "${AWS_REGION}" \
-                            | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+                        # Login to ECR
+                        PASSWORD="$(aws ecr get-login-password --region "${AWS_REGION}")"
+                        echo "$PASSWORD" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 
                         aws ecr describe-repositories --repository-names "${ECR_REPO}" --region "${AWS_REGION}" \
                             || aws ecr create-repository --repository-name "${ECR_REPO}" --region "${AWS_REGION}"
