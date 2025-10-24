@@ -100,20 +100,22 @@ pipeline {
                         --exit-code 1 .
                 '''
             }
-        }
 
-        post {
-            always {
-                archiveArtifacts artifacts: 'trivy-fs-report.html', allowEmptyArchive: true
-                publishHTML(target: [
-                    allowMissing: true, 
-                    keepAll: true, 
-                    reportDir: '.',
-                    reportFiles: 'trivy-fs-report.html',
-                    reportName: 'Trivy Filesystem Scan Report'
-                ])
+            post {
+                always {
+                    archiveArtifacts artifacts: 'trivy-fs-report.html', allowEmptyArchive: true
+                    publishHTML(target: [
+                        allowMissing: true, 
+                        keepAll: true, 
+                        reportDir: '.',
+                        reportFiles: 'trivy-fs-report.html',
+                        reportName: 'Trivy Filesystem Scan Report'
+                    ])
+                }
             }
         }
+
+        
 
         stage('Build Docker Image') {
             steps {
