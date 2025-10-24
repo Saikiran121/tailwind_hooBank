@@ -1,6 +1,11 @@
 pipeline {
     agent any 
 
+    environment {
+        TRIVY_CACHE_DIR = '/var/lib/jenkins/trivy-cache'
+        IMAGE_NAME = "saikiran8050/tailwind_hoobank:${GIT_COMMIT}"
+    }
+
     stages {
         stage('node and npm versions') {
             steps {
@@ -73,6 +78,43 @@ pipeline {
             }
         }
 
+        stage('Trivy FS Scan') {
+            steps {
+                echo 'Running Trivy Filesystem Scan'
+
+                sh '''
+                    mkdir -p $TRIVY_CACHE_DIR
+
+                    # Scan local source directory for vulnerabilities, secrets, and misconfigurations
+
+                    trivy fs --scanners vuln,secret,config \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 0 \
+                        --format html -o trivy-fs-report.html .
+                    
+                    # Fail build if critical/high vulnerabilities found
+                    trivy fs --scanners vuln,secret,config \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 1 .
+                '''
+            }
+        }
+
+        post {
+            always {
+                archiveArtifacts artifacts: 'trivy-fs-report.html', allowEmptyArchive: true
+                publishHTML(target: [
+                    allowMissing: true, 
+                    keepAll: true, 
+                    reportDir: '.',
+                    reportFiles: 'trivy-fs-report.html',
+                    reportName: 'Trivy Filesystem Scan Report'
+                ])
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t saikiran8050/tailwind_hoobank:$GIT_COMMIT .'
@@ -86,5 +128,7 @@ pipeline {
                 }
             }
         }
+
+        
     }
 }
