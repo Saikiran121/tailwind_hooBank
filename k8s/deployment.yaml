@@ -1,0 +1,39 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: hoobank
+  namespace: hoobank
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hoobank
+  template:
+    metadata:
+      labels:
+        app: hoobank
+    spec:
+      containers:
+        - name: hoobank 
+          image: 554739428262.dkr.ecr.ap-south-1.amazonaws.com/tailwind_hoobank:519c6ffb43ec5f40b2db2b282568b97e124d55bb
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"

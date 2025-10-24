@@ -26,3 +26,21 @@ This project is developed by taking JS mastery you-tube channel video tailwind c
     mail.smtp.timeout=20000
 
 
+# Create EKS Cluster
+  - eksctl create cluster \
+        --name hoobank-eks \
+        --region ap-south-1 \
+        --managed \
+        --nodegroup-name ng-1 \
+        --node-type t3.small \
+        --nodes 2 \
+        --nodes-min 2 \
+        --nodes-max 4
+
+
+# Configure your kubeconfig to talk to the cluster:
+  - aws eks update-kubeconfig --name hoobank-eks --region ap-south-1
+
+
+# Check
+  - kubectl get nodes

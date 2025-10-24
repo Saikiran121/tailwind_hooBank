@@ -221,5 +221,32 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to AWS EKS') {
+            environment {
+                AWS_DEFAULT_REGION = 'ap-south-1'
+                EKS_CLUSTER = 'hoobank-eks'
+                ECR_REPO = '554739428262.dkr.ecr.ap-south-1.amazonaws.com/tailwind_hoobank'
+            }
+
+            steps {
+                withAWS(credentials: 'aws-ecr', region: ${AWS_DEFAULT_REGION}) {
+                    sh '''
+                        set -e 
+
+                        # point kubectl at the cluster
+                        aws eks update-kubeconfig --name "$EKS_CLUSTER" --region "$AWS_DEFAULT_REGION"
+
+                        # Apply Manifests
+                        kubectl apply -f k8s/namespace.yaml
+                        kubectl apply -f k8s/deployment.yaml
+                        kubectl apply -f k8s/service.yaml
+
+                        # rollout status (wait until ready)
+                        kubectl -n hoobank rollout status deployment/hoobank
+                    '''
+                }
+            }
+        }
     }
 }
