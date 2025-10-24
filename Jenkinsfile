@@ -4,6 +4,11 @@ pipeline {
     environment {
         TRIVY_CACHE_DIR = '/var/lib/jenkins/trivy-cache'
         IMAGE_NAME = "saikiran8050/tailwind_hoobank:${GIT_COMMIT}"
+
+        AWS_REGION = 'ap-south-1'
+        AWS_ACCOUNT_ID = '554739428262'
+        ECR_REPO = 'tailwind_hoobank'
+        ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
     }
 
     stages {
@@ -178,7 +183,30 @@ pipeline {
             }
         }
 
+        stage('Push to AWS ECR') {
+            steps {
+                sh '''
+                    set -e 
 
+                    # ECR Login
+                    aws ecr get-login-password --region "${AWS_REGION}" \
+                        | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+                    
+
+                    # Ensure repo exists
+                    aws ecr describe-repositories --repository-names "${ECR_REPO}" --region "${AWS_REGION}" \
+                        || aws ecr create-repository --repository-name "${ECR_REPO}" --region "${AWS_REGION}"
+                    
+                    # Tag and Push
+                    docker tag "saikiran8050/tailwind_hoobank:${IMAGE_TAG}" "${ECR_URI}:${IMAGE_TAG}"
+                    docker push "${ECR_URI}:${IMAGE_TAG}"
+
+                    # also push latest tag
+                    docker tag "saikiran8050/tailwind_hoobank:${IMAGE_TAG}" "${ECR_URI}:latest"
+                    docker push "${ECR_URI}:latest"
+                '''
+            }
+        }
 
         
     }
