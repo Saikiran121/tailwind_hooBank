@@ -21,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency Check') {
+        stage('OWASP Dependency CHeck') {
             steps {
                 withCredentials([file(credentialsId: 'nvd-api-props', variable: 'NVD_PROPS')]) {
                     dependencyCheck additionalArguments: '''
