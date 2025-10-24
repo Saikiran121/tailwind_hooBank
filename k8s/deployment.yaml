@@ -13,11 +13,26 @@ spec:
       labels:
         app: hoobank
     spec:
+      # Pod-level security context
+      securityContext:
+        runAsNonRoot: true 
+        seccompProfile:
+          type: RuntimeDefault
+
       containers:
         - name: hoobank 
           image: 554739428262.dkr.ecr.ap-south-1.amazonaws.com/tailwind_hoobank:519c6ffb43ec5f40b2db2b282568b97e124d55bb
           ports:
             - containerPort: 8080
+          
+          # Container-level hardening
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+
           readinessProbe:
             httpGet:
               path: /
@@ -30,6 +45,17 @@ spec:
               port: 8080
             initialDelaySeconds: 15
             periodSeconds: 20
+          
+
+          # Writable paths for nginx on a read-only root FS
+          volumeMounts:
+            - name: nginx-run
+              mountPath: /var/run
+            - name: nginx-cache 
+              mountPath: /var/cache/nginx
+            - name: tmp 
+              mountPath: /tmp
+
           resources:
             requests:
               cpu: "50m"
@@ -37,3 +63,11 @@ spec:
             limits:
               cpu: "250m"
               memory: "256Mi"
+      
+      volumes:
+        - name: nginx-run 
+          emptyDir: {}
+        - name: nginx-cache
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
