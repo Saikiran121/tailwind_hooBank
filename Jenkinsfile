@@ -27,7 +27,7 @@ pipeline {
                     --scan './'
                     --out './'
                     --format 'ALL'
-                    --pretty-print
+                    --prettyPrint
                 ''', odcInstallation: 'OWASP-DepCheck-12'
             }
         }
