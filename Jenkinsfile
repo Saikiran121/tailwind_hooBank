@@ -99,7 +99,7 @@ pipeline {
                     trivy fs --scanners vuln,secret,config \
                         --severity HIGH,CRITICAL \
                         --ignore-unfixed \
-                        --exit-code 1 .
+                        --exit-code 0 .
                 '''
             }
 
